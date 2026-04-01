@@ -47,7 +47,7 @@ public class CityLoader {
             System.out.println(linea);
         }
 
-        this.generarArchivo("C:\\Users\\manue\\Desktop\\ciudad.csv", intersecciones);
+        this.generarArchivo("ciudad.csv", intersecciones);
     }
 
     public void generarArchivo(String ruta, List<String> ciudad) {
