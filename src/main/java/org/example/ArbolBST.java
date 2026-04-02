@@ -43,6 +43,10 @@ public class ArbolBST<T> {
         }
     }
 
+    public Boolean borrar (T valor){
+        return true;
+    }
+
     private static class Nodo<T> {
         public T dato;
         private Nodo<T> izquierdo;
