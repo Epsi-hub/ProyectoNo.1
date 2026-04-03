@@ -7,8 +7,17 @@ public class Main {
         /*GeneradorCiudad generadorCiudad = new GeneradorCiudad();
         generadorCiudad.generarDatos(1000);*/
 
-        DataController dataController = new DataController();
-        dataController.cargarDatos("C:\\Users\\manue\\Desktop\\ciudad5.csv");
+
+        ManejoDeDatos manejoDeDatos = new ManejoDeDatos();
+        manejoDeDatos.cargarDatos("C:\\Users\\manue\\Desktop\\ciudad6.csv");
+        manejoDeDatos.cargarArbolBSTporId();
+        manejoDeDatos.cargarArbolNario();
+
+        manejoDeDatos.recorridosBST();
+        manejoDeDatos.recorridoArbolNario();
+
+        manejoDeDatos.buscarInterseccionesPorId(988);
+
 
     }
 }

@@ -105,7 +105,6 @@ public class ArbolNario<T> {
     }
 
 
-
     private static class NaryNode<T> {
         public T value;
         public List<NaryNode<T>> children;

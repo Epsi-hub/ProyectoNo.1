@@ -40,8 +40,9 @@ public class GeneradorCiudad {
                         int sensor = randomSensor.nextInt(1, 10);
                         int riesgo = randomRiesgo.nextInt(1, 100);
                         int congestion = randomCongestion.nextInt(1, 100);
+                        int activa = randomCongestion.nextInt(0, 2);
                         String id = Integer.toString((Integer)ids.get(cantidad - 1));
-                        intersecciones.add(id + ",Distrito" + String.valueOf(i) + ",Zona" + String.valueOf(j) + "," + String.valueOf(k) + "avenida," + String.valueOf(riesgo) + "," + String.valueOf(congestion) + "," + String.valueOf(sensor));
+                        intersecciones.add(id + ",Distrito" + String.valueOf(i) + ",Zona" + String.valueOf(j) + "," + String.valueOf(k) + "avenida," + String.valueOf(riesgo) + "," + String.valueOf(congestion) + "," + String.valueOf(sensor)+ "," +String.valueOf(activa));
                         --cantidad;
                     }
                 }
@@ -52,7 +53,7 @@ public class GeneradorCiudad {
             System.out.println(linea);
         }
 
-        generarArchivo("C:\\Users\\manue\\Desktop\\ciudad5.csv", intersecciones);
+        generarArchivo("C:\\Users\\manue\\Desktop\\ciudad6.csv", intersecciones);
     }
 
     public void generarArchivo(String ruta, List<String> ciudad) {

@@ -8,6 +8,9 @@ import java.util.Stack;
 public class ArbolBST<T> {
     private Nodo<T> raiz;
     private Comparator<T> comparador;
+    private long comparacionesInsercion = 0;
+    private long comparacionesBusqueda = 0;
+    private long comparacionesEliminacion = 0;
 
     public ArbolBST(Comparator<T> comparador) {
         this.comparador = comparador;
@@ -25,50 +28,208 @@ public class ArbolBST<T> {
 
     private Nodo<T> insertar(T valor, Nodo<T> nodo) {
         if (nodo == null) {
-            nodo = new Nodo<T>(valor);
+            nodo = new Nodo<>(valor);
             return nodo;
         } else if (this.comparador.compare(valor, nodo.dato) == 0) {
+            comparacionesInsercion++;
             return null; //repetido
         } else if (this.comparador.compare(valor, nodo.dato) < 0) { //menor a padre (izquierda)
             Nodo<T> aux = this.insertar(valor, nodo.izquierdo);
             if (aux != null) { //la insersión es válida
                 nodo.izquierdo = aux;
             }
-
+            comparacionesInsercion++;
             return nodo;
         } else { //derecha (mayor a padre)
             Nodo<T> aux = this.insertar(valor, nodo.derecho);
             if (aux != null) {
                 nodo.derecho = aux;
             }
+            comparacionesInsercion++;
 
             return nodo;
         }
     }
 
-    public List<T> inorder(){
-        Nodo<T> aux = this.raiz;
-        Stack<Nodo<T>> stack = new Stack<>();
-        List<T> resultado = new ArrayList<>();
-        while (!stack.isEmpty() || aux != null) {
-            while (aux != null){
-                stack.push(aux);
-                aux = aux.izquierdo;
-            }
-            aux = stack.pop();
-            resultado.add(aux.dato);
+    //Recorrido inorder
 
-            aux = aux.derecho;
+    public List<T> inorder() {
+        List<T> result = new ArrayList<>();
+        if (this.raiz == null) {
+            return result;
+        }
+        return inorder(this.raiz, result);
+    }
+
+    private List<T> inorder(Nodo<T> node, List<T> result) {
+        if (node == null) {
+            return result;
         }
 
-        return resultado;
+        inorder(node.izquierdo, result);
+        result.add(node.dato);
+        inorder(node.derecho, result);
+        return result;
+    }
+
+
+
+    //Recorrido preorder
+    public List<T> preorder() {
+        List<T> result = new ArrayList<>();
+        if (this.raiz == null) {
+            return result;
+        }
+        return preorder(this.raiz, result);
+    }
+
+    private List<T> preorder(Nodo<T> node, List<T> result) {
+        if (node == null) {
+            return result;
+        }
+
+        result.add(node.dato);
+        inorder(node.izquierdo, result);
+        inorder(node.derecho, result);
+        return result;
+    }
+
+
+    //Recorrido postorder
+    public List<T> postorder() {
+        List<T> result = new ArrayList<>();
+        if (this.raiz == null) {
+            return result;
+        }
+        return postorder(this.raiz, result);
+    }
+
+    private List<T> postorder(Nodo<T> node, List<T> result) {
+        if (node == null) {
+            return result;
+        }
+
+        inorder(node.izquierdo, result);
+        inorder(node.derecho, result);
+        result.add(node.dato);
+        return result;
+    }
+
+    //Minimo
+    public T minimo(Nodo<T> nodo) {
+        if (nodo == null) {
+            return null;
+        }
+
+        Nodo<T> actual = nodo;
+        while (actual.izquierdo != null) {
+            actual = actual.izquierdo;
+        }
+        return actual.dato;
+    }
+
+    //Buscar
+    private Nodo<T> buscar (Nodo<T> nodo, T valor){
+        if(nodo == null){
+            return null;
+        }
+
+        if(this.comparador.compare(nodo.dato, valor) == 0){ //Encontrado
+            comparacionesBusqueda++;
+            return nodo;
+        }
+
+        if(this.comparador.compare(nodo.dato, valor) < 0){ //no se ha encontrado pero su valor es menor que su padre
+            comparacionesBusqueda++;
+            return buscar(nodo.derecho, valor);
+        }
+
+        return buscar(nodo.izquierdo, valor);
+    }
+
+    public boolean encontrado(T valor){
+        if(buscar(this.raiz, valor) != null){
+            return true;
+        }else{
+            return false;
+
+        }
 
     }
 
-    public Boolean borrar (T valor){
-        return true;
+    //Eliminar
+
+    private Nodo<T> eliminar(Nodo<T> nodo, T valor) {
+        if (nodo == null) {
+            return null;
+        }
+
+        if (comparador.compare(valor, nodo.dato) == 0) { //se ha encontrado
+            if (nodo.izquierdo == null && nodo.derecho == null) { //nodo hoja
+                return null; //nuevo valor de nodo (solo se borra)
+            }
+            if (nodo.derecho == null ) { //solo hay hijo izquierdo
+                return nodo.izquierdo; //nuevo valor de nodo (su hijo)
+            }
+
+            if (nodo.izquierdo == null ) { //solo hay hijo derecho
+                return nodo.derecho;  //nuevo valor de nodo (su hijo)
+            }
+            // Intercambio entre sucesor inorder y nodo para su eliminación
+            T min = minimo(nodo.derecho);  // Sucesor inorder o valor mas bajo del hijo derecho
+            nodo.dato = min; //dato recibe min
+            nodo.derecho = eliminar(nodo.derecho, min); //eliminación de nodo
+            this.comparacionesEliminacion++;
+            return nodo;
+
+        }
+        if (comparador.compare(valor, nodo.dato) < 0) { //no se ha encontrado pero su valor es menor que su padre
+            this.comparacionesEliminacion++;
+            nodo.izquierdo = eliminar(nodo.izquierdo, valor);//recorrido a la izquierda
+            return nodo;
+        }
+        //no se ha encontrado pero su valor es mayor que su padre
+        this.comparacionesEliminacion++;
+        nodo.derecho = eliminar(nodo.derecho, valor); //recorrido a la derecha
+        return nodo;
     }
 
+
+    public T eliminado (T valor){
+        if(eliminar(this.raiz, valor) != null){
+            return valor;
+        }else {
+            return null;
+        }
+    }
+
+    //Altura
+    public int height() {
+        return height(raiz);
+    }
+
+    private int height(Nodo<T> nodo) {
+        if (nodo == null) {
+            return 0;
+        }
+        return 1 + Math.max(height(nodo.izquierdo), height(nodo.derecho));
+    }
+
+    //Getters
+
+    public long contadorComparacionesInsert (){
+        return comparacionesInsercion;
+    }
+
+    public long contadorComparacionesDelete (){
+        return comparacionesEliminacion;
+    }
+
+    public long contadorComparacionesSearch (){
+        return comparacionesBusqueda;
+    }
+
+    //Nodos
     private static class Nodo<T> {
         public T dato;
         public Nodo<T> izquierdo;
