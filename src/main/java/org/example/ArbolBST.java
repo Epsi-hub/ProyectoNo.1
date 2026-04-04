@@ -52,7 +52,6 @@ public class ArbolBST<T> {
     }
 
     //Recorrido inorder
-
     public List<T> inorder() {
         List<T> result = new ArrayList<>();
         if (this.raiz == null) {
@@ -195,11 +194,11 @@ public class ArbolBST<T> {
     }
 
 
-    public T eliminado (T valor){
+    public boolean eliminado (T valor){
         if(eliminar(this.raiz, valor) != null){
-            return valor;
+            return true;
         }else {
-            return null;
+            return false;
         }
     }
 

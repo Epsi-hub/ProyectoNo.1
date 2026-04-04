@@ -17,8 +17,6 @@ public class Interseccion {
     private int sensores;
     private String nombre;
 
-
-
     public Interseccion(int id, String distrito, String zona, String avenida, int nivelRiesgo, int nivelCongestion, int sensores, int activa){
         this.id = id;
         this.distrito = distrito;
@@ -38,6 +36,9 @@ public class Interseccion {
 
     public String getNombre() {
         return nombre;
+    }
+    public boolean isActiva() {
+        return activa;
     }
 
     public String getDistrito() {

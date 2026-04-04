@@ -39,9 +39,6 @@ public class ManejoDeDatos {
             throw new RuntimeException(e);
         }
 
-
-
-
     }
 
     //BST
@@ -76,7 +73,7 @@ public class ManejoDeDatos {
     }
 
     //Buscar
-    public void buscarInterseccionesPorId(int valor){
+    public void buscarInterseccionesPorIdBST(int valor){
         if(arbolBSTPorId.encontrado(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
             System.out.println("Interseccion " + valor + " encontrada");
         }else{
@@ -85,17 +82,69 @@ public class ManejoDeDatos {
 
     }
 
-
-
    //Eliminar
+   public void eliminarInterseccionesPorIdBST(int valor){
+       if(arbolBSTPorId.eliminado(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
+           System.out.println("Interseccion " + valor + " eliminada");
+       }else{
+           System.out.println("Interseccion " + valor + " no eliminada");
+       }
+
+   }
+
 
     //AVL
+
     public void cargarArbolAVLporId(){
         arbolAVLPorId = new ArbolAVL(ordenPorId);
         for (Interseccion interseccion: intersecciones) {
-            arbolAVLPorId.insert(interseccion);
+            if(interseccion.isActiva())
+                arbolAVLPorId.insert(interseccion);
         }
     }
+
+    //Mostrar Recorridos
+    private void recorridosAVL(ArbolAVL<Interseccion> arbolAVL){
+        System.out.println("Recorrido Inorder ");
+        for (Interseccion interseccion: arbolAVL.inorder()) {
+            System.out.print(interseccion.getId() + " ");
+        }
+        System.out.println("Recorrido Preorder ");
+        for (Interseccion interseccion: arbolAVL.preorder()) {
+            System.out.print(interseccion.getId() +  " ");
+        }
+        System.out.println("Recorrido Postorder ");
+        for (Interseccion interseccion: arbolAVL.postorder()) {
+            System.out.print(interseccion.getId() +  " ");
+        }
+        System.out.println();
+    }
+
+    public void recorridosAVL(){
+        System.out.println("Recorridos ArbolBST indexado por Ids ");
+        recorridosAVL(arbolAVLPorId);
+
+    }
+
+    //Buscar
+    public void buscarInterseccionesPorIdAVL(int valor){
+        if(arbolAVLPorId.search(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
+            System.out.println("Interseccion " + valor + " encontrada");
+        }else{
+            System.out.println("Interseccion " + valor + " no encontrada");
+        }
+
+    }
+
+    //Eliminar
+    public void eliminarInterseccionesPorIdAVL(int valor){
+        if(arbolAVLPorId.delete(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
+            System.out.println("Interseccion " + valor + " encontrada");
+        }else{
+            System.out.println("Interseccion " + valor + " no encontrada");
+        }
+    }
+
 
 
     //N - Ario
@@ -131,6 +180,24 @@ public class ManejoDeDatos {
 
         return estadisticas;
 
+    }
+
+    //Cola
+    public void cargarEventosAleatorios(int cantidad){
+        String[] eventos = {"Accidente grave", "Ambulancia en ruta", "Congestión alta", "Semáforo dañado", "Colision", "Lluvia fuerte", "Inundacion"};
+        Random eventosRandom = new Random();
+
+        for(int i = 0; i < cantidad; i++){
+            int tipo =  eventosRandom.nextInt(0,eventos.length);
+            int prioridad = eventosRandom.nextInt(1, cantidad);
+            Evento evento = new Evento(String.valueOf(i),eventos[tipo],prioridad);
+            cola.insertar(evento);
+        }
+    }
+
+    public void estadisticasCola(){
+        System.out.println("Total eventos en cola: " + cola.size());
+        System.out.println("Evento con mayor prioridad: " + cola.maxPrioridad());
     }
 
 }

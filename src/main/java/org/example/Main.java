@@ -12,11 +12,12 @@ public class Main {
         manejoDeDatos.cargarDatos("C:\\Users\\manue\\Desktop\\ciudad6.csv");
         manejoDeDatos.cargarArbolBSTporId();
         manejoDeDatos.cargarArbolNario();
+        manejoDeDatos.cargarArbolAVLporId();
 
         manejoDeDatos.recorridosBST();
         manejoDeDatos.recorridoArbolNario();
 
-        manejoDeDatos.buscarInterseccionesPorId(988);
+        manejoDeDatos.buscarInterseccionesPorIdBST(988);
 
 
     }
