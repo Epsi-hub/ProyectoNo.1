@@ -20,6 +20,7 @@ public class ArbolNario<T> {
         NaryNode<T> zona = crear(distrito,nombreZona);
         NaryNode<T> avenida = crear(zona,nombreAvenida);
         avenida.children.add(new NaryNode<>(interseccion));
+        this.elementos++;
     }
 
     public NaryNode<T> crear(NaryNode<T> padre, T valor) { //Busca en los hijos del nodo padre para crear solo una vez un elemento dentro de otro al haber varias intersecciones en una division urbana
@@ -84,7 +85,7 @@ public class ArbolNario<T> {
 
         for(NaryNode<T> child: this.root.children){
             int hojas = contarHojas(child);
-            resultado.append("Cantidad de intersecciones en " +child.value+":"+hojas+"\n");
+            resultado.append("Cantidad de intersecciones en " +child.value+":"+hojas+",     ");
         }
         return resultado.toString();
     }
@@ -102,6 +103,10 @@ public class ArbolNario<T> {
         }
         return hojas;
 
+    }
+
+    public int hojas(){
+        return contarHojas(this.root);
     }
 
     public float factorRamificacionPromedio(){

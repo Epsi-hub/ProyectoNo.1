@@ -11,6 +11,7 @@ public class ColaDePrioridad<T> {
     private long tiempoExtraccionTotal = 0;
 
 
+
     public ColaDePrioridad(Comparator<T> comparador){
         this.heap = new ArrayList<>();
         this.comparador = comparador ;

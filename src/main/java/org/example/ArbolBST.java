@@ -29,11 +29,7 @@ public class ArbolBST<T> {
             return nodo;
         } else if (this.comparador.compare(valor, nodo.dato) == 0) {
             comparacionesInsercion++;
-            Nodo<T> aux = this.insertar(valor, nodo.izquierdo);
-            if (aux != null) {
-                nodo.izquierdo = aux;
-            }
-            return nodo; //si es repetido lo inserta a la izquierda
+            return null;
         } else if (this.comparador.compare(valor, nodo.dato) < 0) { //menor a padre (izquierda)
             Nodo<T> aux = this.insertar(valor, nodo.izquierdo);
             if (aux != null) { //la insersión es válida
@@ -171,8 +167,9 @@ public class ArbolBST<T> {
     }
 
     public T encontrado(T valor){
-        if(buscar(this.raiz, valor) != null){
-            return buscar(this.raiz, valor).dato;
+        Nodo<T> resultado = buscar(this.raiz, valor);
+        if(resultado != null){
+            return resultado.dato ;
         }else{
             return null;
 
@@ -252,6 +249,12 @@ public class ArbolBST<T> {
 
     public long contadorComparacionesSearch (){
         return comparacionesBusqueda;
+    }
+
+    //Reinicio
+    public void reset(){
+        comparacionesBusqueda = 0;
+        comparacionesEliminacion = 0;
     }
 
     //Nodos

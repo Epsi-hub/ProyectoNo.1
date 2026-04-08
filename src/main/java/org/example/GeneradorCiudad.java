@@ -9,28 +9,36 @@ import java.util.List;
 import java.util.Random;
 
 public class GeneradorCiudad {
-    public void generarDatos(int interseccionesTotales) {
+    public void generarDatos(int interseccionesTotales,String ruta,boolean ordenadas) {
         Random randominterseccion = new Random();
         Random randomSensor = new Random();
         Random randomRiesgo = new Random();
         Random randomCongestion = new Random();
-        int distritos = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.125));
-        int zonas = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.25));
-        int avenidasPosibles = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.375));
-        int interseccionesPorAvenida = randominterseccion.nextInt(1, (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.25)));
+        int distritos = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.1875)); //^2/16
+        int zonas = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.375));
+        int avenidas = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.375));
+        int interseccionesPorAvenida = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.0625));
 
-        int avenidas = avenidasPosibles +  (int)Math.ceil(Math.pow((double)(interseccionesTotales - distritos*zonas*avenidasPosibles*interseccionesPorAvenida), (double)0.375));
+        //int interseccionesPorAvenida = randominterseccion.nextInt(2, (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.25)));
 
+        //int avenidas = avenidasPosibles +  (int)Math.ceil(Math.pow((double)(interseccionesTotales - distritos*zonas*avenidasPosibles*interseccionesPorAvenida), (double)0.375));
+
+        //int avenidas = (int)Math.ceil((double)(1000 - (distritos*zonas*avenidasPosibles*interseccionesPorAvenida))/(distritos*zonas*interseccionesPorAvenida));
+
+        int total = distritos*zonas*avenidas*interseccionesPorAvenida;
         List<String> intersecciones = new ArrayList();
         List<Integer> ids = new ArrayList();
+        System.out.print("Intersecciones: " + total);
 
 
-        for(int i = 1; i <= interseccionesTotales; ++i) {
+        for(int i = 1; i <= interseccionesTotales; i++) {
             ids.add(i);
         }
 
-        //int cont = 0;
-        Collections.shuffle(ids);
+        if (!ordenadas) {
+            Collections.shuffle(ids);
+        }
+
         int cantidad = interseccionesTotales;
 
         for(int i = 1; i <= distritos; ++i) {
@@ -49,11 +57,11 @@ public class GeneradorCiudad {
             }
         }
 
-        for(String linea : intersecciones) {
+        /*for(String linea : intersecciones) {
             System.out.println(linea);
-        }
+        }*/
 
-        generarArchivo("C:\\Users\\manue\\Desktop\\ciudad6.csv", intersecciones);
+        generarArchivo(ruta, intersecciones);
     }
 
     public void generarArchivo(String ruta, List<String> ciudad) {

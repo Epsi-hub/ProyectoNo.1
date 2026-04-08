@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ManejoDeDatos {
     public List<Interseccion> intersecciones = new ArrayList<>();
+    public List<String> reporteFinal =  new ArrayList<>();
 
     //BST
     public ArbolBST<Interseccion> arbolBSTPorId;
@@ -16,6 +17,10 @@ public class ManejoDeDatos {
 
     //AVL
     public ArbolAVL<Interseccion> arbolAVLPorId;
+    public ArbolAVL<Interseccion> arbolAVLPorCongestion;
+    public ArbolAVL<Interseccion> arbolAVLPorRiesgo;
+    public ArbolAVL<Interseccion> arbolAVLPorTiempoReporte;
+
 
     //Nario
     public ArbolNario<String> arbolNarioCiudad;
@@ -23,6 +28,7 @@ public class ManejoDeDatos {
     //Cola de prioridad
     private Comparator<Evento> comparador = (a,b) ->Integer.compare(b.getPrioridad(), a.getPrioridad());
     public ColaDePrioridad<Evento> cola = new ColaDePrioridad<>(comparador);
+    private long tiempoExtraccionTotal = 0;
 
     //Criterios de insercion
     public Comparator<Interseccion> ordenPorId = (a,b) -> Integer.compare(a.getId(),b.getId());
@@ -78,98 +84,137 @@ public class ManejoDeDatos {
     //BST
     public void cargarArbolBSTporId(){
         arbolBSTPorId = new ArbolBST(ordenPorId);
+        long inicio = System.nanoTime();
         for (Interseccion interseccion: intersecciones) {
             arbolBSTPorId.insertar(interseccion);
         }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/intersecciones.size();
+        reporteFinal.add("Comparaciones de incersion en BST por Id: " +  arbolBSTPorId.contadorComparacionesInsert());
+        reporteFinal.add("Tiempo promedio de incersion: " + tiempoProm);
+        reporteFinal.add("");
     }
 
     public void cargarArbolBSTporCongestion(){
         arbolBSTPorCongestion= new ArbolBST(ordenPorCongestion);
+        long inicio = System.nanoTime();
         for (Interseccion interseccion: intersecciones) {
             arbolBSTPorCongestion.insertar(interseccion);
         }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/intersecciones.size();
+        reporteFinal.add("Comparaciones de incersion en BST por nivel de congestion: " +  arbolBSTPorCongestion.contadorComparacionesInsert());
+        reporteFinal.add("Tiempo promedio de incersion: " + tiempoProm);
+        reporteFinal.add("");
     }
 
     public void cargarArbolBSTporRiesgo(){
-        arbolBSTPorCongestion= new ArbolBST(ordenPorRiesgo);
+        arbolBSTPorRiesgo= new ArbolBST(ordenPorRiesgo);
+        long inicio = System.nanoTime();
         for (Interseccion interseccion: intersecciones) {
             arbolBSTPorRiesgo.insertar(interseccion);
         }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/intersecciones.size();
+        reporteFinal.add("Comparaciones de incersion en BST por Nivel de riesgo: " +  arbolBSTPorRiesgo.contadorComparacionesInsert());
+        reporteFinal.add("Tiempo promedio de incersion: " + tiempoProm);
+        reporteFinal.add("");
     }
 
     public void cargarArbolBSTporTiempoReporte(){
         arbolBSTPorTiempoReporte= new ArbolBST(ordenPorTiempoReporte);
+        long inicio = System.nanoTime();
         for (Interseccion interseccion: intersecciones) {
             arbolBSTPorTiempoReporte.insertar(interseccion);
         }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/intersecciones.size();
+        reporteFinal.add("Comparaciones de incersion en BST por Tiempo de Reporte: " +  arbolBSTPorTiempoReporte.contadorComparacionesInsert());
+        reporteFinal.add("Tiempo promedio de insercion: " + tiempoProm);
+        reporteFinal.add("");
     }
 
 
 
     //Mostrar Recorridos
     private void recorridosBST(ArbolBST<Interseccion> arbolBST){
-        System.out.println("Recorrido Inorder ");
+
+        reporteFinal.add("Recorrido Inorder");
+        StringBuilder inorder = new StringBuilder();
         for (Interseccion interseccion: arbolBST.inorder()) {
-            System.out.print(interseccion.getId() + " ");
+            inorder.append(interseccion.getId() + ",");
         }
-        System.out.println("Recorrido Preorder ");
+        reporteFinal.add(inorder.toString());
+
+        reporteFinal.add("Recorrido Preorder ");
+        StringBuilder preorder = new StringBuilder();
         for (Interseccion interseccion: arbolBST.preorder()) {
-            System.out.print(interseccion.getId() +  " ");
+            preorder.append(interseccion.getId() +  ",");
         }
-        System.out.println("Recorrido Postorder ");
+        reporteFinal.add(preorder.toString());
+
+        reporteFinal.add("Recorrido Postorder ");
+        StringBuilder postorder = new StringBuilder();
         for (Interseccion interseccion: arbolBST.postorder()) {
-            System.out.print(interseccion.getId() +  " ");
+            postorder.append(interseccion.getId() +  ",");
         }
-        System.out.println();
-        System.out.println("Recorrido LevelOrder ");
+        reporteFinal.add(postorder.toString());
+
+        reporteFinal.add("Recorrido LevelOrder ");
+        StringBuilder levelorder = new StringBuilder();
         for (List<Interseccion>nivel: arbolBST.levelOrder()) {
             for (Interseccion interseccion: nivel) {
-                System.out.print(interseccion.getId() +  " ");
+                levelorder.append(interseccion.getId() +  ",");
             }
         }
+        reporteFinal.add(levelorder.toString());
+        reporteFinal.add("");
+
 
     }
 
     public void recorridosBST(){
-        System.out.println("Recorridos ArbolBST indexado por Ids ");
+        reporteFinal.add("Recorridos ArbolBST indexado por Ids ");
         recorridosBST(arbolBSTPorId);
 
-        System.out.println("Recorridos ArbolBST indexado por Nivel de congestion ");
+        reporteFinal.add("Recorridos ArbolBST indexado por Nivel de congestion ");
         recorridosBST(arbolBSTPorCongestion);
 
-        System.out.println("Recorridos ArbolBST indexado por Nivel de Riesgo");
+        reporteFinal.add("Recorridos ArbolBST indexado por Nivel de Riesgo");
         recorridosBST(arbolBSTPorRiesgo);
 
-        System.out.println("Recorridos ArbolBST indexado por Tiempo de reporte");
+        reporteFinal.add("Recorridos ArbolBST indexado por Tiempo de reporte");
         recorridosBST(arbolBSTPorTiempoReporte);
+        reporteFinal.add("");
 
     }
 
     //Buscar
     public void buscarInterseccionesPorIdBST(int valor){
-        if(arbolBSTPorId.encontrado(new Interseccion(valor, "", "", "", 0, 0, 0,0)) != null){
-            System.out.println("Interseccion " + valor + " encontrada");
-        }else{
-            System.out.println("Interseccion " + valor + " no encontrada");
-        }
+        long inicio = System.nanoTime();
+        Interseccion interseccion=  arbolBSTPorId.encontrado(new Interseccion(valor, "", "", "", 0, 0, 0,0));
+        long fin = System.nanoTime();
+        long tiempo =  fin - inicio;
+        reporteFinal.add("Busqueda de interseccion " + valor);
+        reporteFinal.add("Tiempo de busqueda en arbol BST por ID en nanosegundos: " + tiempo);
+        reporteFinal.add("Comparaciones: " + arbolBSTPorId.contadorComparacionesSearch());
+        reporteFinal.add("");
+
+        arbolBSTPorId.reset();
 
     }
 
-    public void buscarInterseccionesPorCongestionBST(int congestion, int id){
-        if(arbolBSTPorCongestion.encontrado(new Interseccion(id, "", "", "", 0, congestion, 0,0)) != null){
-            System.out.println("Interseccion " + id + " encontrada");
-        }else{
-            System.out.println("Interseccion " + id + " no encontrada");
-        }
-
-    }
 
    //Eliminar
    public void eliminarInterseccionesPorIdBST(int valor){
        if(arbolBSTPorId.eliminado(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
-           System.out.println("Interseccion " + valor + " eliminada");
+           System.out.println("Intersecion " + valor + " eliminada");
        }else{
-           System.out.println("Interseccion " + valor + " no eliminada");
+           System.out.println("Intersecion " + valor + " no eliminada");
        }
 
    }
@@ -178,42 +223,119 @@ public class ManejoDeDatos {
     //AVL
     public void cargarArbolAVLporId(){
         arbolAVLPorId = new ArbolAVL(ordenPorId);
+        long inicio = System.nanoTime();
         for (Interseccion interseccion: intersecciones) {
-            if(interseccion.isActiva())
-                arbolAVLPorId.insert(interseccion);
+            arbolAVLPorId.insert(interseccion);
         }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/arbolAVLPorId.size();
+        reporteFinal.add("Comparaciones de insercion en AVL por Id: " +  arbolAVLPorId.getComparacionesInsercion());
+        reporteFinal.add("Tiempo promedio de insercion: " + tiempoProm);
+
     }
+
+    public void cargarArbolAVLporCongestion(){
+        arbolAVLPorCongestion = new ArbolAVL(ordenPorCongestion);
+        long inicio = System.nanoTime();
+        for (Interseccion interseccion: intersecciones) {
+            arbolAVLPorCongestion.insert(interseccion);
+        }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/arbolAVLPorCongestion.size();
+        reporteFinal.add("Comparaciones de insercion en AVL por nivel de congestion: " +  arbolAVLPorCongestion.getComparacionesInsercion());
+        reporteFinal.add("Tiempo promedio de de insercion: " + tiempoProm);
+    }
+
+    public void cargarArbolAVLporRiesgo(){
+        arbolAVLPorRiesgo = new ArbolAVL(ordenPorRiesgo);
+        long inicio = System.nanoTime();
+        for (Interseccion interseccion: intersecciones) {
+            arbolAVLPorRiesgo.insert(interseccion);
+        }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/arbolAVLPorRiesgo.size();
+        reporteFinal.add("Comparaciones de incercion en AVL por nivel de riesgo: " +  arbolAVLPorRiesgo.getComparacionesInsercion());
+        reporteFinal.add("Tiempo promedio de insercion: " + tiempoProm);
+    }
+
+    public void cargarArbolAVLporTiempoReporte(){
+        arbolAVLPorTiempoReporte = new ArbolAVL(ordenPorTiempoReporte);
+        long inicio = System.nanoTime();
+        for (Interseccion interseccion: intersecciones) {
+            arbolAVLPorTiempoReporte.insert(interseccion);
+        }
+        long fin = System.nanoTime();
+        long tiempo  = fin - inicio;
+        long tiempoProm = tiempo/arbolAVLPorTiempoReporte.size();
+        reporteFinal.add("Comparaciones de incercion en AVL por tiempo de reporte: " +  arbolAVLPorTiempoReporte.getComparacionesInsercion());
+        reporteFinal.add("Tiempo promedio de insercion: " + tiempoProm);
+    }
+
+
 
     //Mostrar Recorridos
     private void recorridosAVL(ArbolAVL<Interseccion> arbolAVL){
-        System.out.println("Recorrido Inorder ");
+        reporteFinal.add("");
+        reporteFinal.add("Recorrido Inorder ");
+        StringBuilder inorder = new StringBuilder();
         for (Interseccion interseccion: arbolAVL.inorder()) {
-            System.out.print(interseccion.getId() + " ");
+            inorder.append(interseccion.getId() + ",");
         }
-        System.out.println("Recorrido Preorder ");
+        reporteFinal.add(inorder.toString());
+
+        reporteFinal.add("Recorrido Preorder ");
+        StringBuilder preorder = new StringBuilder();
         for (Interseccion interseccion: arbolAVL.preorder()) {
-            System.out.print(interseccion.getId() +  " ");
+            preorder.append(interseccion.getId() +  ",");
         }
-        System.out.println("Recorrido Postorder ");
+        reporteFinal.add(preorder.toString());
+
+        reporteFinal.add("Recorrido Postorder ");
+        StringBuilder postorder = new StringBuilder();
         for (Interseccion interseccion: arbolAVL.postorder()) {
-            System.out.print(interseccion.getId() +  " ");
+            postorder.append(interseccion.getId() +  ",");
         }
-        System.out.println();
+        reporteFinal.add(postorder.toString());
+
+        reporteFinal.add("Recorrido LevelOrder ");
+        StringBuilder levelorder = new StringBuilder();
+        for (List<Interseccion>nivel: arbolAVL.levelOrder()) {
+            for (Interseccion interseccion: nivel) {
+                levelorder.append(interseccion.getId() +  ",");
+            }
+        }
+        reporteFinal.add(levelorder.toString());
+        reporteFinal.add("");
     }
 
     public void recorridosAVL(){
-        System.out.println("Recorridos ArbolBST indexado por Ids ");
+        reporteFinal.add("Recorridos ArbolAVL indexado por Ids ");
         recorridosAVL(arbolAVLPorId);
 
+        reporteFinal.add("Recorridos ArbolAVL indexado por nivel de congestion ");
+        recorridosAVL(arbolAVLPorCongestion);
+
+        reporteFinal.add("Recorridos ArbolAVL indexado por nivel de riesgo ");
+        recorridosAVL(arbolAVLPorRiesgo);
+
+        reporteFinal.add("Recorridos ArbolAVL indexado por tiempo de reporte ");
+        recorridosAVL(arbolAVLPorTiempoReporte);
     }
 
     //Buscar
     public void buscarInterseccionesPorIdAVL(int valor){
-        if(arbolAVLPorId.search(new Interseccion(valor, "", "", "", 0, 0, 0,0))){
-            System.out.println("Interseccion " + valor + " encontrada");
-        }else{
-            System.out.println("Interseccion " + valor + " no encontrada");
-        }
+        long inicio = System.nanoTime();
+        Interseccion interseccion=  arbolAVLPorId.search(new Interseccion(valor, "", "", "", 0, 0, 0,0));
+        long fin = System.nanoTime();
+        long tiempo =  fin - inicio;
+        reporteFinal.add("Busqueda de interseccion " + valor);
+        reporteFinal.add("Tiempo de busqueda en arbol AVL por ID en nanosegundos: " + tiempo);
+        reporteFinal.add("Numero de comparaciones realizadas " + arbolAVLPorId.getComparacionesBusqueda());
+        arbolAVLPorId.reset();
+        reporteFinal.add("");
 
     }
 
@@ -240,23 +362,65 @@ public class ManejoDeDatos {
     //Mostrar Recorrido level order
     public void recorridoArbolNario(){
         List<List<String>>recorridoPorNivel= arbolNarioCiudad.levelOrder();
-        System.out.println("Recorrido arbol nario");
+        reporteFinal.add("");
+        reporteFinal.add("Recorrido arbol nario");
         for(List<String> nivel : recorridoPorNivel) {
+            StringBuilder level = new StringBuilder();
             for(String elemento : nivel) {
-                System.out.printf(elemento + " ");
+                level.append(elemento + ",");
             }
-            System.out.println();
+            reporteFinal.add(level.toString());
         }
     }
 
     //Estadisticas de todos los arboles
-    public List<String> estadisticasArboles(){
-        List<String> estadisticas = new ArrayList<>();
+    public void estadisticasBST(){
+        reporteFinal.add("");
+        int alturaId = arbolBSTPorId.height();
+        reporteFinal.add("Altura del arbol BST ordenado por Id:," + alturaId);
 
-        StringBuilder  estadisticasArbolNario = new StringBuilder();
-        estadisticasArbolNario.append(" Estadisticas arbol Nario: Profundidad maxima: " + arbolNarioCiudad.profunidadMaxima() + " Intersecciones por distrito: " + arbolNarioCiudad.HojasPorDistrito());
-        estadisticas.add(estadisticasArbolNario.toString());
-        return estadisticas;
+        int alturaCongestion = arbolBSTPorCongestion.height();
+        reporteFinal.add("Altura del arbol BST ordenado por congestion:," + alturaCongestion);
+
+        int alturaRiesgo = arbolBSTPorRiesgo.height();
+        reporteFinal.add("Altura del arbol BST ordenado por riesgo:," + alturaRiesgo);
+
+        int alturaTiempo = arbolBSTPorTiempoReporte.height();
+        reporteFinal.add("Altura del arbol BST ordenado por actualizacion de reporte:," + alturaTiempo);
+
+        reporteFinal.add("");
+
+    }
+
+    public void estadisticasAVL(){
+        reporteFinal.add("");
+        reporteFinal.add("Altura del arbol AVL ordenado por Id: " + arbolAVLPorId.height());
+        reporteFinal.add("Total Rotaciones " + arbolAVLPorId.rotaciones());
+        reporteFinal.add("Factor de balanceo " + arbolAVLPorId.factorBalance());
+
+        reporteFinal.add("Altura del arbol AVL ordenado por Congestion" + arbolAVLPorCongestion.height());
+        reporteFinal.add("Total Rotaciones " + arbolAVLPorCongestion.rotaciones());
+        reporteFinal.add("Factor de balanceo " + arbolAVLPorCongestion.factorBalance());
+
+        reporteFinal.add("Altura del arbol AVL ordenado por nivel de riesgo:," + arbolAVLPorRiesgo.height());
+        reporteFinal.add("Total Rotaciones " + arbolAVLPorRiesgo.rotaciones());
+        reporteFinal.add("Factor de balanceo " + arbolAVLPorRiesgo.factorBalance());
+
+        reporteFinal.add("Altura del arbol AVL ordenado por tiempo de reporte:," + arbolAVLPorTiempoReporte.height());
+        reporteFinal.add("Total Rotaciones," + arbolAVLPorTiempoReporte.rotaciones());
+        reporteFinal.add("Factor de balanceo," + arbolAVLPorTiempoReporte.factorBalance());
+        reporteFinal.add("");
+
+    }
+
+    public void estadisticasNario(){
+        reporteFinal.add("");
+        reporteFinal.add("Altura del arbol nario: " + arbolNarioCiudad.profunidadMaxima());
+        reporteFinal.add("Cantidad total de hojas del arbol nario: " + arbolNarioCiudad.hojas());
+        reporteFinal.add(arbolNarioCiudad.HojasPorDistrito());
+        reporteFinal.add("Cantidad de nodos internos: " + arbolNarioCiudad.CantidadNodosInternos());
+        reporteFinal.add("Factor promedio de ramificacion: " + arbolNarioCiudad.factorRamificacionPromedio());
+        reporteFinal.add("");
 
     }
 
@@ -267,6 +431,8 @@ public class ManejoDeDatos {
         int prioridad = random.nextInt(1,101);
         String tipo = tipos[random.nextInt(tipos.length)];
         int interseccion = random.nextInt(1,intersecciones.size());
+
+        //System.out.printf(tipo+",");
         return new Evento(id, prioridad, tipo, interseccion);
     }
 
@@ -274,15 +440,23 @@ public class ManejoDeDatos {
         for(int i = 0; i < cantidadEventos; i++){
             cola.insertar(generarEvento(i));
         }
+        System.out.println();
     }
 
     public void procesarEvento(){
         Evento evento = cola.extraer();
-        Interseccion interseccion = arbolBSTPorId.encontrado(new Interseccion(evento.getIdInterseccion(), "", "", "", 0, 0, 0,0));
+        Interseccion interseccion = arbolAVLPorId.search(new Interseccion(evento.getIdInterseccion(), "", "", "", 0, 0, 0,0));
 
         if(interseccion == null){return;}
 
+
         arbolBSTPorCongestion.eliminado(interseccion);
+        arbolBSTPorRiesgo.eliminado(interseccion);
+        arbolBSTPorTiempoReporte.eliminado(interseccion);
+
+        arbolAVLPorCongestion.delete(interseccion);
+        arbolAVLPorRiesgo.delete(interseccion);
+        arbolAVLPorTiempoReporte.delete(interseccion);
 
         switch (evento.getTipo()){
             case "accidente":
@@ -317,6 +491,12 @@ public class ManejoDeDatos {
         }
         interseccion.actualizarReporte();
         arbolBSTPorCongestion.insertar(interseccion);
+        arbolBSTPorRiesgo.insertar(interseccion);
+        arbolBSTPorTiempoReporte.insertar(interseccion);
+
+        arbolAVLPorCongestion.insert(interseccion);
+        arbolAVLPorRiesgo.insert(interseccion);
+        arbolAVLPorTiempoReporte.insert(interseccion);
 
     }
 
@@ -327,10 +507,21 @@ public class ManejoDeDatos {
     }
 
     //Pasa de ser un Max-Heap a un Min-Heap, de manera que ahora los eventos de menor prioridad se procesan primero
-    public void InvertirPrioridad(){
+    public void invertirPrioridad(){
         Comparator<Evento> comparadorNuevo = (a,b) ->Integer.compare(a.getPrioridad(),b.getPrioridad());
         cola.cambiarComparador(comparadorNuevo);
     }
+
+    public void estadisticasColaPrioridad(){
+        reporteFinal.add("");
+        reporteFinal.add("Cola de prioridades");
+        reporteFinal.add("Intercambios totales: " + cola.getIntercambiosTotales());
+        reporteFinal.add("Tiempo total de insercion: " + cola.getTiempoInsercionTotal());
+        reporteFinal.add("Tiempo total de extraccion: " + cola.getTiempoExtraccionTotal());
+        reporteFinal.add("");
+    }
+
+
 
 
 

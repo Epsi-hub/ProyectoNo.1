@@ -299,11 +299,12 @@ public class ArbolAVL<T> {
     }
 
     //Busqueda
-    public boolean search(T value) {
-        if(search(this.node, value) != null){
-            return true;
+    public T search(T value) {
+        Node<T> resultado = search(this.node, value);
+        if(resultado != null){
+            return resultado.value ;
         }else{
-            return false;
+            return null;
 
         }
     }
@@ -344,6 +345,12 @@ public class ArbolAVL<T> {
     }
     public int getComparacionesEliminacion() {return this.comparacionesEliminacion;}
     public int getComparacionesBusqueda() {return this.comparacionesBusqueda;}
+
+    //reiniciar estadisticas
+    public void reset(){
+        this.comparacionesBusqueda=0;
+        this.comparacionesEliminacion=0;
+    }
 
 
     //Nodos

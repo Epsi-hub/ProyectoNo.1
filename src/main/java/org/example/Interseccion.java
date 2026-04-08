@@ -1,6 +1,7 @@
 package org.example;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class Interseccion {
     private int id;
@@ -29,7 +30,9 @@ public class Interseccion {
             this.activa = false;
         this.nivelCongestion = nivelCongestion;
         this.nivelRiesgo = nivelRiesgo;
-        this.actualizacionReporte = System.currentTimeMillis();
+        Random rand = new Random();
+        long retraso = rand.nextLong(1,1000000);
+        this.actualizacionReporte = System.nanoTime() + retraso;
         this.nombre = "Interseccion" + Integer.toString(id);
 
     }
@@ -67,7 +70,7 @@ public class Interseccion {
     }
 
     public void actualizarReporte() {
-        this.actualizacionReporte = System.currentTimeMillis();
+        this.actualizacionReporte = System.nanoTime();
     }
 
     //Este objeto es lo que va dentro del BST y el AVL
