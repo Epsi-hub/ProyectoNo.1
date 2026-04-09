@@ -36,7 +36,7 @@ public class Main {
         System.out.println("Simulacion No. 3 terminada, resultados en: reporte3.csv ");
 
         //100000 intersecciones desordenadas
-        Simulacion simulacion4 = new Simulacion(100000,10000,"C:\\Users\\manue\\Desktop\\ciudad4.csv",false, true, true);
+        Simulacion simulacion4 = new Simulacion(100000,10000,"ciudad4.csv",false, true, true);
         simulacion4.ArbolesBinarios();
         simulacion4.ArbolesAVL();
         simulacion4.ArbolNario();
@@ -45,7 +45,7 @@ public class Main {
         System.out.println("Simulacion No. 4 terminada, resultados en: reporte4.csv ");
 
         //1000 intersecciones ordenadas (Peor caso para BST y mayor numero de rotaciones para AVL)
-        Simulacion simulacion5 = new Simulacion(1000,10000,"C:\\Users\\manue\\Desktop\\ciudad5.csv",true,true,true);
+        Simulacion simulacion5 = new Simulacion(1000,10000,"ciudad5.csv",true,true,true);
         simulacion5.ArbolesBinarios();
         simulacion5.ArbolesAVL();
         simulacion5.ArbolNario();
