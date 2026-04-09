@@ -19,16 +19,12 @@ public class GeneradorCiudad {
         int avenidas = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.375));
         int interseccionesPorAvenida = (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.0625));
 
-        //int interseccionesPorAvenida = randominterseccion.nextInt(2, (int)Math.ceil(Math.pow((double)interseccionesTotales, (double)0.25)));
 
-        //int avenidas = avenidasPosibles +  (int)Math.ceil(Math.pow((double)(interseccionesTotales - distritos*zonas*avenidasPosibles*interseccionesPorAvenida), (double)0.375));
-
-        //int avenidas = (int)Math.ceil((double)(1000 - (distritos*zonas*avenidasPosibles*interseccionesPorAvenida))/(distritos*zonas*interseccionesPorAvenida));
 
         int total = distritos*zonas*avenidas*interseccionesPorAvenida;
         List<String> intersecciones = new ArrayList();
         List<Integer> ids = new ArrayList();
-        System.out.print("Intersecciones: " + total);
+
 
 
         for(int i = 1; i <= interseccionesTotales; i++) {
@@ -57,9 +53,7 @@ public class GeneradorCiudad {
             }
         }
 
-        /*for(String linea : intersecciones) {
-            System.out.println(linea);
-        }*/
+
 
         generarArchivo(ruta, intersecciones);
     }

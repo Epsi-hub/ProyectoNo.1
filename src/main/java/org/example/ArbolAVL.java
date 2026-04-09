@@ -26,45 +26,45 @@ public class ArbolAVL<T> {
     }
 
     private Node<T> insert(Node<T> root, T value) {
-        if (root == null) {
+        if (root == null) { //Se crea raiz
             this.size++;
             return new Node<>(value);
         }
 
         int compare = comparator.compare(value, root.value);
 
-        if (compare < 0) {
+        if (compare < 0) { //Si es menor se coloca a la izquierda del ultimo nodo
             comparacionesInsercion++;
             root.left = insert(root.left, value);
         }
-        else if (compare > 0) {
+        else if (compare > 0) { //Si es mayor se coloca a la derecha
             comparacionesInsercion++;
             root.right = insert(root.right, value);
         } else {
             return root;
         }
 
-        root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right));
+        root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right)); //Se actualiza altura
 
-        int balance = getBalance(root);
+        int balance = getBalance(root); //Se obtiene el balance
 
-        if (balance < -1 && comparator.compare(value, root.left.value) > 0) {
+        if (balance < -1 && comparator.compare(value, root.left.value) > 0) {  //Desbalance  de izquierda - derecha, al insertar a la derecha del nodo, se rota a la izquierda el valor insertado y luego se rota a la derecha en el padre
             comparacionesInsercion++;
             root.left = rotateLeft(root.left);
             return rotateRight(root);
         }
 
-        if (balance > 1 && comparator.compare(value, root.right.value) < 0) {
+        if (balance > 1 && comparator.compare(value, root.right.value) < 0) { //Desbalance  de derecha - zizquierda, al insertar a la izquierda del nodo, se rota a la derecha el valor insertado y luego se rota a la izquierda en el padre
             comparacionesInsercion++;
             root.right = rotateRight(root.right);
             return rotateLeft(root);
         }
 
-        if (balance < -1) {
+        if (balance < -1) { //Desbalance de izquierda-izquierda, por insertar en el hijo derecho del nodo, el arbol se rota hacia la izquierda
             return rotateRight(root);
         }
 
-        if (balance > 1) {
+        if (balance > 1) { //Desbalance de derecha-derecha por insertar en el hijo izquierdo del nodo, el arbol se rota hacia la derecha
             return rotateLeft(root);
         }
 
@@ -270,6 +270,7 @@ public class ArbolAVL<T> {
             node.value = min;
             node.right = delete(node.right, min);
         }
+        //Se elimina con en un BST, de manera que se intercambia el minimo a la derecha por el valor eliminado (sucesor en inorder)
 
         if (node != null) {
             node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
@@ -296,6 +297,7 @@ public class ArbolAVL<T> {
         }
 
         return node;
+        //Se obtiene la altura, se actualiza ya sin el nodo eliminado, se verifica el balance y se aplican los mismo procedimientos en cada uno de los 4 casos de desbalanceo aplicados en la insercion
     }
 
     //Busqueda
@@ -326,7 +328,7 @@ public class ArbolAVL<T> {
             return search(root.left, value);
         }
 
-        return search(root.right, value);
+        return search(root.right, value); //Empieza a buscar desde la raiz y recorre la rama izquierda y derecha recursivamente hasta llegar a hasta los hijos null de las hojas o hasta encontrar el valor en alguna de las ramas de la raiz
     }
 
     public int factorBalance(){

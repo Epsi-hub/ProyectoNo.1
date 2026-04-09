@@ -11,17 +11,19 @@ public class Simulacion {
     public int cantidadIntersecciones;
     public int cantidadEventos;
     private String ruta;
-    public ManejoDeDatos administrador = new ManejoDeDatos();
+    public ManejoDeDatos administrador;
     public GeneradorCiudad generador = new GeneradorCiudad();
 
 
 
-    public Simulacion(int cantidadIntersecciones, int cantidadEventos, String ruta, boolean ordenadas) {
+    public Simulacion(int cantidadIntersecciones, int cantidadEventos, String ruta, boolean ordenadas, boolean usoBST, boolean usoAVL) {
         this.cantidadIntersecciones = cantidadIntersecciones;
         this.cantidadEventos = cantidadEventos;
         this.ruta =  ruta;
         this.generador.generarDatos(cantidadIntersecciones,ruta,ordenadas);
+        this.administrador = new ManejoDeDatos(usoBST,usoAVL);
         this.administrador.cargarDatos(ruta);
+
     }
 
 
@@ -81,6 +83,7 @@ public class Simulacion {
         }
 
         administrador.estadisticasColaPrioridad();
+        administrador.estadisticasListaordenada();
 
 
 

@@ -16,10 +16,10 @@ public class ArbolNario<T> {
 
     //Insercion
     public void insertar(T nombreDistrito,T nombreZona, T nombreAvenida, T interseccion ) {
-        NaryNode<T> distrito = crear(this.root,nombreDistrito);
-        NaryNode<T> zona = crear(distrito,nombreZona);
-        NaryNode<T> avenida = crear(zona,nombreAvenida);
-        avenida.children.add(new NaryNode<>(interseccion));
+        NaryNode<T> distrito = crear(this.root,nombreDistrito); //Se crean los distritos
+        NaryNode<T> zona = crear(distrito,nombreZona); //Se cren las zonas por cada distrito
+        NaryNode<T> avenida = crear(zona,nombreAvenida); //Se crean las avenidas por cada zona
+        avenida.children.add(new NaryNode<>(interseccion)); //Se crean las intersecciones por cada avenida
         this.elementos++;
     }
 

@@ -225,7 +225,7 @@ public class ArbolBST<T> {
         }
     }
 
-    //Altura
+    //Altura desde cierto nodo
     public int height() {
         return height(raiz);
     }

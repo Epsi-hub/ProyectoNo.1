@@ -28,7 +28,11 @@ public class ManejoDeDatos {
     //Cola de prioridad
     private Comparator<Evento> comparador = (a,b) ->Integer.compare(b.getPrioridad(), a.getPrioridad());
     public ColaDePrioridad<Evento> cola = new ColaDePrioridad<>(comparador);
-    private long tiempoExtraccionTotal = 0;
+    public boolean usoBST = true;
+    public boolean usoAVL = true;
+
+    //Lista ordenada
+    public ListaOrdenada<Evento> listaOrdenada = new ListaOrdenada<>(comparador);
 
     //Criterios de insercion
     public Comparator<Interseccion> ordenPorId = (a,b) -> Integer.compare(a.getId(),b.getId());
@@ -53,7 +57,10 @@ public class ManejoDeDatos {
 
 
 
-    public ManejoDeDatos(){}
+    public ManejoDeDatos(boolean usoBST, boolean usoAVL){
+        this.usoBST = usoBST;
+        this.usoAVL = usoAVL;
+    }
 
 
     public void cargarDatos(String ruta) {
@@ -432,31 +439,45 @@ public class ManejoDeDatos {
         String tipo = tipos[random.nextInt(tipos.length)];
         int interseccion = random.nextInt(1,intersecciones.size());
 
-        //System.out.printf(tipo+",");
+
         return new Evento(id, prioridad, tipo, interseccion);
     }
 
     public void cargarCola(int cantidadEventos){
         for(int i = 0; i < cantidadEventos; i++){
             cola.insertar(generarEvento(i));
+            listaOrdenada.insertar(generarEvento(i));
         }
-        System.out.println();
+
     }
+
+
 
     public void procesarEvento(){
         Evento evento = cola.extraer();
-        Interseccion interseccion = arbolAVLPorId.search(new Interseccion(evento.getIdInterseccion(), "", "", "", 0, 0, 0,0));
+        listaOrdenada.extraer();
+        Interseccion interseccion = null;
+
+        if (usoAVL) {
+            interseccion = arbolAVLPorId.search(new Interseccion(evento.getIdInterseccion(), "", "", "", 0, 0, 0,0));
+        } else if (usoBST) {
+            interseccion = arbolBSTPorId.encontrado(new Interseccion(evento.getIdInterseccion(), "", "", "", 0, 0, 0,0));
+        }
 
         if(interseccion == null){return;}
 
 
-        arbolBSTPorCongestion.eliminado(interseccion);
-        arbolBSTPorRiesgo.eliminado(interseccion);
-        arbolBSTPorTiempoReporte.eliminado(interseccion);
+        if(usoBST == true) {
+            arbolBSTPorCongestion.eliminado(interseccion);
+            arbolBSTPorRiesgo.eliminado(interseccion);
+            arbolBSTPorTiempoReporte.eliminado(interseccion);
+        }
 
-        arbolAVLPorCongestion.delete(interseccion);
-        arbolAVLPorRiesgo.delete(interseccion);
-        arbolAVLPorTiempoReporte.delete(interseccion);
+        if(this.usoAVL == true) {
+            arbolAVLPorCongestion.delete(interseccion);
+            arbolAVLPorRiesgo.delete(interseccion);
+            arbolAVLPorTiempoReporte.delete(interseccion);
+        }
 
         switch (evento.getTipo()){
             case "accidente":
@@ -490,13 +511,21 @@ public class ManejoDeDatos {
 
         }
         interseccion.actualizarReporte();
-        arbolBSTPorCongestion.insertar(interseccion);
-        arbolBSTPorRiesgo.insertar(interseccion);
-        arbolBSTPorTiempoReporte.insertar(interseccion);
 
-        arbolAVLPorCongestion.insert(interseccion);
-        arbolAVLPorRiesgo.insert(interseccion);
-        arbolAVLPorTiempoReporte.insert(interseccion);
+        if(usoBST == true) {
+            arbolBSTPorCongestion.insertar(interseccion);
+            arbolBSTPorRiesgo.insertar(interseccion);
+            arbolBSTPorTiempoReporte.insertar(interseccion);
+        }
+
+
+
+        if(usoAVL == true) {
+            arbolAVLPorCongestion.insert(interseccion);
+            arbolAVLPorRiesgo.insert(interseccion);
+            arbolAVLPorTiempoReporte.insert(interseccion);
+        }
+
 
     }
 
@@ -518,6 +547,14 @@ public class ManejoDeDatos {
         reporteFinal.add("Intercambios totales: " + cola.getIntercambiosTotales());
         reporteFinal.add("Tiempo total de insercion: " + cola.getTiempoInsercionTotal());
         reporteFinal.add("Tiempo total de extraccion: " + cola.getTiempoExtraccionTotal());
+        reporteFinal.add("");
+    }
+
+    public void estadisticasListaordenada(){
+        reporteFinal.add("");
+        reporteFinal.add("Lista ordenada");
+        reporteFinal.add("Tiempo total de insercion: " + listaOrdenada.getTiempoInsercion());
+        reporteFinal.add("Tiempo total de extraccion: " + listaOrdenada.getTiempoExtraccion());
         reporteFinal.add("");
     }
 
